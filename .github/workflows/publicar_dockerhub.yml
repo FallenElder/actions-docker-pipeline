@@ -1,0 +1,18 @@
+name: publicar_dockerhub
+on:
+ 
+  push:
+    branches: [ "main" ]
+
+
+jobs:
+  
+  build:
+   
+    runs-on: ubuntu-latest
+    
+    steps:
+      
+      - uses: actions/checkout@v4
+      - name: Logar DockerHub
+        run: echo "SEU_TOKEN" | docker login -u SEU_USUARIO --password-stdin
