@@ -1,0 +1,38 @@
+services:
+
+  python-api:
+    container_name: python-api
+    build: .
+    image: python-api:latest
+    ports:
+      - 3080:3080
+    restart: unless-stopped
+    networks:
+      - backend
+    depends_on:
+      - mysql-api
+
+  mysql-api:
+    image: mysql:8
+    container_name: mysql-api
+    volumes:
+      - "mysql_api:/var/lib/mysql"
+      - "./mysql_files/mysql-root:/run/secrets/mysql-root"
+      - "./mysql_files/mysql-database:/run/secrets/mysql-database"
+      - "./mysql_files/mysql-user:/run/secrets/mysql-user"
+      - "./mysql_files/mysql-user-pass:/run/secrets/mysql-user-pass"
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root
+      - MYSQL_DATABASE_FILE=/run/secrets/mysql-database
+      - MYSQL_USER_FILE=/run/secrets/mysql-user
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql-user-pass
+    restart: unless-stopped
+    networks:
+      - backend
+
+volumes:
+  mysql_api:
+
+networks:
+  backend:
+    driver: bridge
